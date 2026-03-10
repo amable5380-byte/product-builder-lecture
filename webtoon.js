@@ -26,6 +26,27 @@ document.addEventListener('DOMContentLoaded', () => {
         statusContainer.scrollTop = statusContainer.scrollHeight; // Scroll to bottom
     }
 
+    function addDownloadButton(webtoonName) {
+        const downloadBtn = document.createElement('a');
+        downloadBtn.href = '#'; // Placeholder link for simulation
+        downloadBtn.textContent = `🎬 ${webtoonName}.mp4 다운로드`;
+        downloadBtn.classList.add('button-link'); // Re-use button-link style
+        downloadBtn.setAttribute('download', `${webtoonName}.mp4`); // Simulate download attribute
+        
+        downloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('이것은 시뮬레이션 기능입니다. 실제 파일은 생성되지 않았습니다.');
+        });
+        
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.textAlign = 'center';
+        buttonContainer.style.marginTop = '20px';
+        buttonContainer.appendChild(downloadBtn);
+
+        statusContainer.appendChild(buttonContainer);
+        statusContainer.scrollTop = statusContainer.scrollHeight;
+    }
+
     async function simulateShortsCreation(url) {
         addStatusMessage('✅ 요청이 접수되었습니다. 쇼츠 제작을 시작합니다.');
         await new Promise(r => setTimeout(r, 1000));
@@ -47,7 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const webtoonName = url.split('/').pop() || '추천웹툰';
         const seoTitle = getSeoTitle(webtoonName);
         addStatusMessage(`✅ 완성! 추천 제목: ${seoTitle}`);
-        addStatusMessage('📥 (시뮬레이션) 영상 다운로드 링크가 여기에 표시됩니다.');
+        
+        // Add the download button
+        addDownloadButton(webtoonName);
     }
 
     function getSeoTitle(webtoonName) {
