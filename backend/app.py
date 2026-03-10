@@ -12,14 +12,13 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # --- Flask App Initialization ---
 app = Flask(__name__)
 
-# Configure CORS to allow requests specifically from your GitHub Pages domain
-# and from local development environments.
-CORS(app, resources={r"/api/*": {
-    "origins": [
-        "http://127.0.0.1:5500",  # For local testing (e.g., with VS Code Live Server)
-        "https://amable5380-byte.github.io" # Your deployed frontend
-    ]
-}})
+# Configure CORS to allow requests from your specific GitHub Pages domain.
+# This is more secure than allowing all origins.
+CORS(app, resources={
+    r"/api/*": {"origins": "https://amable5380-byte.github.io"},
+    r"/downloads/*": {"origins": "https://amable5380-byte.github.io"}
+})
+
 
 # --- Helper Functions ---
 def get_sanitized_filename(url):
@@ -28,12 +27,9 @@ def get_sanitized_filename(url):
     return "".join(c for c in base_name if c.isalnum() or c in ('-', '_')).rstrip()
 
 # --- API Endpoints ---
-@app.route('/api/create-shorts', methods=['POST', 'OPTIONS']) # Added OPTIONS for preflight requests
+@app.route('/api/create-shorts', methods=['POST'])
 def create_shorts_endpoint():
-    if request.method == 'OPTIONS':
-        # Handle CORS preflight request
-        return _build_cors_preflight_response()
-
+    # The Flask-CORS extension automatically handles OPTIONS preflight requests.
     data = request.get_json()
     webtoon_url = data.get('url')
 
@@ -56,24 +52,22 @@ def create_shorts_endpoint():
             '-y',
             output_filepath
         ]
-        result = subprocess.run(ffmpeg_command, check=True, capture_output=True, text=True)
+        subprocess.run(ffmpeg_command, check=True, capture_output=True, text=True)
         print("✅ Simulation complete. Dummy MP4 file created.")
-        
+
     except FileNotFoundError:
-        print("❌ FFmpeg not found. Please install FFmpeg to run this simulation.")
+        print("❌ FFmpeg not found. Please install FFmpeg on your system to run this.")
         return jsonify({"error": "Server configuration error: FFmpeg not found."}), 500
     except subprocess.CalledProcessError as e:
         print(f"❌ Error during dummy file creation: {e.stderr}")
         return jsonify({"error": "Failed to create dummy video file."}), 500
 
     download_url = f'/downloads/{output_filename}'
-    response = jsonify({
-        "message": "Video creation process started successfully.",
+    return jsonify({
+        "message": "Video creation process completed.",
         "downloadUrl": download_url,
         "fileName": output_filename
     })
-    
-    return response
 
 @app.route('/downloads/<filename>')
 def download_file(filename):
@@ -81,14 +75,13 @@ def download_file(filename):
     print(f"⬇️ Serving file: {filename}")
     return send_from_directory(OUTPUT_DIR, filename, as_attachment=True)
 
-# --- CORS Preflight Response Helper ---
-def _build_cors_preflight_response():
-    response = jsonify(success=True)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization")
-    response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
-    return response
 
 # --- Main Execution ---
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # To fix the "Failed to fetch" error caused by mixed content (https frontend
+    # calling an http backend), we run the Flask server over HTTPS using a temporary,
+    # self-signed certificate.
+    # Note: You may need to install the pyOpenSSL library: pip install pyOpenSSL
+    print("🚀 Starting Flask server on https://127.0.0.1:5000")
+    print("ℹ️ Your browser will show a security warning. You must accept it to proceed.")
+    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context='adhoc')
