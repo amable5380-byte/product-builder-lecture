@@ -1,14 +1,12 @@
 
 :root {
     --main-bg-color: #f0f0f0;
-    --number-bg-color: #ffffff;
-    --number-text-color: #333333;
+    --text-color: #333333;
     --button-bg-color: #4CAF50;
     --button-text-color: white;
     --button-hover-bg-color: #45a049;
     --glow-color: rgba(76, 175, 80, 0.7);
-    --form-bg-color: #ffffff;
-    --form-text-color: #333333;
+    --container-bg-color: #ffffff;
     --input-bg-color: #f0f0f0;
     --input-border-color: #ccc;
     --input-focus-border-color: #4CAF50;
@@ -24,13 +22,12 @@ body {
     margin: 0;
     padding: 20px;
     background-color: var(--main-bg-color);
-    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/%3E%3C/svg%3E');
     gap: 20px;
 }
 
 .container {
     text-align: center;
-    background: var(--form-bg-color);
+    background: var(--container-bg-color);
     padding: 40px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.05);
@@ -40,7 +37,7 @@ body {
 
 h1, h2 {
     font-size: 2.5rem;
-    color: var(--form-text-color);
+    color: var(--text-color);
     margin-bottom: 30px;
 }
 
@@ -48,32 +45,23 @@ h2 {
     font-size: 2rem;
 }
 
-.numbers {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-}
-
-.number {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: var(--number-bg-color);
-    color: var(--number-text-color);
-    font-size: 1.8rem;
-    font-weight: bold;
+#webcam-container {
+    margin: 30px auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, background-color 0.3s;
 }
 
+#label-container {
+    margin: 20px 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 
 button,
-#generate,
-#toggle-dark-mode {
+#start-button {
     background-color: var(--button-bg-color);
     color: var(--button-text-color);
     border: none;
@@ -87,22 +75,16 @@ button,
 }
 
 button:hover,
-#generate:hover,
-#toggle-dark-mode:hover {
+#start-button:hover {
     background-color: var(--button-hover-bg-color);
     box-shadow: 0 0 20px 5px var(--glow-color);
     transform: translateY(-2px);
 }
 
 button:active,
-#generate:active,
-#toggle-dark-mode:active {
+#start-button:active {
     transform: translateY(1px);
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-#toggle-dark-mode {
-    margin-left: 10px;
 }
 
 
@@ -116,7 +98,7 @@ button:active,
 #contact-form label {
     font-size: 1rem;
     font-weight: bold;
-    color: var(--form-text-color);
+    color: var(--text-color);
     text-align: left;
 }
 
@@ -127,7 +109,7 @@ button:active,
     border: 1px solid var(--input-border-color);
     background-color: var(--input-bg-color);
     font-size: 1rem;
-    color: var(--form-text-color);
+    color: var(--text-color);
     transition: border-color 0.3s;
 }
 
@@ -145,29 +127,16 @@ button:active,
 /* Dark Mode */
 body.dark-mode {
     --main-bg-color: #121212;
-    --number-bg-color: #1e1e1e;
-    --number-text-color: #ffffff;
+    --text-color: #ffffff;
     --button-bg-color: #bb86fc;
     --button-text-color: #000000;
     --button-hover-bg-color: #a063f0;
     --glow-color: rgba(187, 134, 252, 0.7);
-    --form-bg-color: #1e1e1e;
-    --form-text-color: #ffffff;
+    --container-bg-color: #1e1e1e;
     --input-bg-color: #2a2a2a;
     --input-border-color: #444;
     --input-focus-border-color: #bb86fc;
 }
-
-body.dark-mode .container {
-    background: var(--form-bg-color);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1), 0 6px 6px rgba(255, 255, 255, 0.05);
-}
-
-body.dark-mode h1,
-body.dark-mode h2 {
-    color: var(--form-text-color);
-}
-
 
 /* Responsive Design */
 @media (max-width: 600px) {
@@ -181,15 +150,5 @@ body.dark-mode h2 {
 
     h2 {
         font-size: 1.8rem;
-    }
-
-    .number {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-    }
-
-    .numbers {
-        gap: 10px;
     }
 }

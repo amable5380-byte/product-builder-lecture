@@ -1,25 +1,49 @@
+const startButton = document.getElementById('start-button');
+const labelContainer = document.getElementById('label-container');
+const webcamContainer = document.getElementById('webcam-container');
 
-const menuDisplay = document.getElementById('menu-display');
-const generateButton = document.getElementById('generate');
-const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+// the link to your model provided by Teachable Machine export panel
+const URL = "https://teachablemachine.withgoogle.com/models/x8ciNIai5/";
 
-const dinnerMenus = [
-    "치킨", "피자", "삼겹살", "떡볶이", "초밥", "파스타",
-    "김치찌개", "된장찌개", "부대찌개", "곱창", "족발", "보쌈",
-    "짜장면", "짬뽕", "탕수육", "라멘", "돈까스", "햄버거"
-];
+let model, webcam, maxPredictions;
 
-const recommendDinner = () => {
-    const randomIndex = Math.floor(Math.random() * dinnerMenus.length);
-    const recommendedMenu = dinnerMenus[randomIndex];
-    menuDisplay.textContent = recommendedMenu;
-};
+// Load the image model and setup the webcam
+async function init() {
+    const modelURL = URL + "model.json";
+    const metadataURL = URL + "metadata.json";
 
-generateButton.addEventListener('click', recommendDinner);
+    model = await tmImage.load(modelURL, metadataURL);
+    maxPredictions = model.getTotalClasses();
 
-toggleDarkModeButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-});
+    const flip = true; // whether to flip the webcam
+    webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+    await webcam.setup(); // request access to the webcam
+    await webcam.play();
+    webcamContainer.appendChild(webcam.canvas);
+    // create label divs
+    for (let i = 0; i < maxPredictions; i++) { // and class labels
+        labelContainer.appendChild(document.createElement("div"));
+    }
+    window.requestAnimationFrame(loop);
 
-// Recommend a dinner on initial load
-recommendDinner();
+}
+
+async function loop() {
+    webcam.update(); // update the webcam frame
+    await predict();
+    window.requestAnimationFrame(loop);
+}
+
+// run the webcam image through the image model
+async function predict() {
+    // predict can take in an image, video or canvas html element
+    const prediction = await model.predict(webcam.canvas);
+    for (let i = 0; i < maxPredictions; i++) {
+        const classPrediction =
+            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+        labelContainer.childNodes[i].innerHTML = classPrediction;
+    }
+}
+
+
+startButton.addEventListener('click', init);

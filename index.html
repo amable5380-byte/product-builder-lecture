@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 저녁 뭐 먹지?</title>
+    <title>동물상 테스트</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>오늘 저녁 뭐 먹지?</h1>
-        <div id="menu-display"></div>
-        <button id="generate">메뉴 추천받기</button>
-        <button id="toggle-dark-mode">Toggle Dark Mode</button>
+        <h1>동물상 테스트</h1>
+        <p>당신의 얼굴은 강아지상일까요, 고양이상일까요?</p>
+        <div id="webcam-container"></div>
+        <div id="label-container"></div>
+        <button id="start-button">시작하기</button>
     </div>
 
     <div class="container" id="contact-form">
@@ -32,18 +33,17 @@
 
     <div class="container" id="disqus_thread"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script src="main.js"></script>
     <script>
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
         /*
         var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = PAGE_URL;
+        this.page.identifier = PAGE_IDENTIFIER;
         };
         */
-        (function() { // DON'T EDIT BELOW THIS LINE
+        (function() {
         var d = document, s = d.createElement('script');
         s.src = 'https://productbuilder-lzwht3lujc.disqus.com/embed.js';
         s.setAttribute('data-timestamp', +new Date());
