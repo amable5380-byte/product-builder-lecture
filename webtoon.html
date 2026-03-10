@@ -14,20 +14,19 @@
 
     <div class="container">
         <h1>AI 웹툰 쇼츠 제작기</h1>
-        <p>좋아하는 웹툰의 URL을 입력하고 버튼을 누르면, AI가 자동으로 멋진 쇼츠 영상을 만들어 드립니다. (현재 프론트엔드 UI만 구현되어 있습니다.)</p>
+        <p>좋아하는 웹툰의 URL을 입력하고 버튼을 누르면, AI가 자동으로 멋진 쇼츠 영상을 만들어 드립니다.</p>
         
         <div class="webtoon-form">
             <input type="url" id="webtoon-url" placeholder="웹툰 URL을 여기에 붙여넣으세요">
             <button id="create-shorts-btn">쇼츠 제작하기</button>
         </div>
 
-        <div id="webtoon-status" style="margin-top: 20px; text-align: left; background: #f3f3f3; padding: 15px; border-radius: 8px;">
-            <!-- Status messages will appear here -->
-        </div>
+        <div id="webtoon-status" class="status-container"></div>
     </div>
 
+    <script src="webtoon.js"></script>
     <footer>
-        <p>&copy; 2023 오늘 뭐 먹지? & 동물상 테스트. All Rights Reserved.</p>
+        <p>&copy; 2024 AI Webtoon Shorts Maker. All Rights Reserved.</p>
         <nav>
             <a href="index.html">홈</a> |
             <a href="about.html">소개</a> |
@@ -35,6 +34,5 @@
             <a href="contact.html">문의하기</a>
         </nav>
     </footer>
-    <script src="webtoon.js"></script>
 </body>
 </html>
