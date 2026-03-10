@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dinnerFeature = document.getElementById('dinner-feature');
     const animalFeature = document.getElementById('animal-feature');
 
-    const dinnerNumbersContainer = document.getElementById('dinner-numbers');
+    const dinnerSuggestionBox = document.getElementById('dinner-suggestion-box');
     const generateDinnerBtn = document.getElementById('generate-dinner-btn');
 
     const imageUpload = document.getElementById('image-upload');
@@ -51,34 +51,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- "What to Eat for Dinner?" Feature ---
-    const dinnerNumbers = [];
+    const dinnerMenus = {
+        ko: ["치킨", "피자", "삼겹살", "떡볶이", "초밥", "파스타", "김치찌개", "된장찌개", "부대찌개", "곱창"],
+        en: ["Chicken", "Pizza", "Pork Belly", "Tteokbokki", "Sushi", "Pasta", "Kimchi Jjigae", "Doenjang Jjigae", "Budae Jjigae", "Gopchang"]
+    };
 
-    function createDinnerNumbers() {
-        dinnerNumbersContainer.innerHTML = '';
-        for (let i = 0; i < 6; i++) {
-            const numberDiv = document.createElement('div');
-            numberDiv.className = 'number';
-            numberDiv.textContent = '0';
-            dinnerNumbersContainer.appendChild(numberDiv);
-            dinnerNumbers.push(numberDiv);
-        }
-    }
+    function generateDinnerSuggestion() {
+        const lang = document.documentElement.lang || 'ko';
+        const menus = dinnerMenus[lang];
+        const randomIndex = Math.floor(Math.random() * menus.length);
+        const suggestion = menus[randomIndex];
 
-    function generateDinnerNumbers() {
-        let previousNumbers = [];
-        dinnerNumbers.forEach(numberDiv => {
-            let randomNumber;
-            do {
-                randomNumber = Math.floor(Math.random() * 45) + 1;
-            } while (previousNumbers.includes(randomNumber));
-            previousNumbers.push(randomNumber);
-            numberDiv.textContent = randomNumber;
-        });
+        dinnerSuggestionBox.classList.add('animate');
+        setTimeout(() => {
+            dinnerSuggestionBox.textContent = suggestion;
+            dinnerSuggestionBox.classList.remove('animate');
+        }, 500); // Animation duration
     }
 
     if (generateDinnerBtn) {
-        createDinnerNumbers();
-        generateDinnerBtn.addEventListener('click', generateDinnerNumbers);
+        generateDinnerBtn.addEventListener('click', generateDinnerSuggestion);
     }
 
     // --- "Animal Face Test" Feature ---

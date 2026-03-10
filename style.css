@@ -6,8 +6,8 @@
     --button-hover-bg-color: #45a049;
     --glow-color: rgba(76, 175, 80, 0.7);
     --container-bg-color: #ffffff;
-    --number-bg-color: #ffffff;
-    --number-text-color: #333333;
+    --suggestion-box-bg-color: #ffffff;
+    --suggestion-box-text-color: #333333;
 }
 
 body {
@@ -52,26 +52,30 @@ h2 {
     font-size: 2rem;
 }
 
-.numbers {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-}
-
-.number {
-    width: 60px;
-    height: 60px;
+.suggestion-box {
+    width: 100%;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
-    background-color: var(--number-bg-color);
-    color: var(--number-text-color);
-    font-size: 1.8rem;
+    border-radius: 10px;
+    background-color: var(--suggestion-box-bg-color);
+    color: var(--suggestion-box-text-color);
+    font-size: 2.5rem;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
 }
+
+.suggestion-box.animate {
+    animation: spin 0.5s ease-in-out;
+}
+
+@keyframes spin {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
 
 #label-container {
     margin: 20px 0;
@@ -132,8 +136,8 @@ body.dark-mode {
     --button-hover-bg-color: #a063f0;
     --glow-color: rgba(187, 134, 252, 0.7);
     --container-bg-color: #1e1e1e;
-    --number-bg-color: #2a2a2a;
-    --number-text-color: #ffffff;
+    --suggestion-box-bg-color: #2a2a2a;
+    --suggestion-box-text-color: #ffffff;
 }
 
 /* Responsive Design */
