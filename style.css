@@ -8,6 +8,8 @@
     --container-bg-color: #ffffff;
     --suggestion-box-bg-color: #ffffff;
     --suggestion-box-text-color: #333333;
+    --footer-bg-color: #e9e9e9;
+    --footer-text-color: #555555;
 }
 
 body {
@@ -22,6 +24,7 @@ body {
     background-color: var(--main-bg-color);
     gap: 20px;
     position: relative;
+    color: var(--text-color);
 }
 
 .top-right-buttons {
@@ -39,17 +42,33 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.05);
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
+    margin-top: 80px; /* Adjust for top buttons */
 }
 
-h1, h2 {
+.container h1 {
     font-size: 2.5rem;
     color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.container p {
+    font-size: 1.1rem;
+    line-height: 1.6;
     margin-bottom: 30px;
 }
 
-h2 {
-    font-size: 2rem;
+/* Styles for about and privacy pages */
+.container ul {
+    text-align: left;
+    list-style-position: inside;
+    margin-bottom: 20px;
+}
+
+.container h2 {
+    font-size: 1.8rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
 }
 
 .suggestion-box {
@@ -76,7 +95,6 @@ h2 {
     100% { transform: rotateY(360deg); }
 }
 
-
 #label-container {
     margin: 20px 0;
     font-size: 1.5rem;
@@ -102,7 +120,7 @@ h2 {
     transform: translateY(-2px);
 }
 
-button {
+button, input[type="submit"] {
     background-color: var(--button-bg-color);
     color: var(--button-text-color);
     border: none;
@@ -114,7 +132,7 @@ button {
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 
-button:hover {
+button:hover, input[type="submit"]:hover {
     background-color: var(--button-hover-bg-color);
     transform: translateY(-1px);
 }
@@ -125,6 +143,49 @@ button:hover {
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     margin-top: 20px;
+}
+
+/* Contact Form */
+#contact-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#contact-form label {
+    font-size: 1.1rem;
+    text-align: left;
+}
+
+#contact-form input, #contact-form textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Footer */
+footer {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: var(--footer-bg-color);
+    border-radius: 10px;
+    color: var(--footer-text-color);
+}
+
+footer nav a {
+    color: var(--footer-text-color);
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+footer nav a:hover {
+    color: var(--text-color);
 }
 
 /* Dark Mode */
@@ -138,6 +199,8 @@ body.dark-mode {
     --container-bg-color: #1e1e1e;
     --suggestion-box-bg-color: #2a2a2a;
     --suggestion-box-text-color: #ffffff;
+    --footer-bg-color: #1e1e1e;
+    --footer-text-color: #aaaaaa;
 }
 
 /* Responsive Design */
@@ -149,6 +212,7 @@ body.dark-mode {
     }
     .container {
         padding: 20px;
+        margin-top: 20px;
     }
     h1 {
         font-size: 2rem;

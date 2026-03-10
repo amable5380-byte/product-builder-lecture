@@ -16,39 +16,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const labelContainer = document.getElementById('label-container');
 
     // --- Feature Toggle ---
-    toggleFeatureBtn.addEventListener('click', () => {
-        if (dinnerFeature.style.display !== 'none') {
-            dinnerFeature.style.display = 'none';
-            animalFeature.style.display = 'block';
-            toggleFeatureBtn.textContent = document.documentElement.lang === 'ko' ? '저녁 메뉴 추천' : 'Dinner Suggestion';
-        } else {
-            dinnerFeature.style.display = 'block';
-            animalFeature.style.display = 'none';
-            toggleFeatureBtn.textContent = document.documentElement.lang === 'ko' ? '동물상 테스트' : 'Animal Face Test';
-        }
-    });
-
-    // --- Language Toggle ---
-    let currentLang = 'ko';
-    toggleLangBtn.addEventListener('click', () => {
-        currentLang = (currentLang === 'ko') ? 'en' : 'ko';
-        document.documentElement.lang = currentLang;
-        updateUIText(currentLang);
-    });
-
-    function updateUIText(lang) {
-        document.querySelectorAll('[data-ko]').forEach(el => {
-            el.textContent = el.dataset[lang];
+    if (toggleFeatureBtn) {
+        toggleFeatureBtn.addEventListener('click', () => {
+            if (dinnerFeature.style.display !== 'none') {
+                dinnerFeature.style.display = 'none';
+                animalFeature.style.display = 'block';
+                updateUIText(document.documentElement.lang);
+            } else {
+                dinnerFeature.style.display = 'block';
+                animalFeature.style.display = 'none';
+                updateUIText(document.documentElement.lang);
+            }
         });
     }
 
+    // --- Language Toggle ---
+    let currentLang = document.documentElement.lang || 'ko';
+    if (toggleLangBtn) {
+        toggleLangBtn.addEventListener('click', () => {
+            currentLang = (currentLang === 'ko') ? 'en' : 'ko';
+            document.documentElement.lang = currentLang;
+            updateUIText(currentLang);
+        });
+    }
+
+    function updateUIText(lang) {
+        document.querySelectorAll('[data-ko]').forEach(el => {
+            // Update text content for non-input/button elements
+            if (el.tagName !== 'INPUT' && el.tagName !== 'BUTTON' && !el.classList.contains('custom-file-upload')) {
+                el.textContent = el.dataset[lang];
+            } else if (el.id === 'toggle-feature-btn') {
+                const isDinnerVisible = dinnerFeature && dinnerFeature.style.display !== 'none';
+                if (isDinnerVisible) {
+                    el.textContent = lang === 'ko' ? '동물상 테스트' : 'Animal Face Test';
+                } else {
+                    el.textContent = lang === 'ko' ? '저녁 메뉴 추천' : 'Dinner Suggestion';
+                }
+            } else {
+                 el.textContent = el.dataset[lang];
+            }
+        });
+         // Special handling for title
+        if (document.title.includes('오늘 뭐 먹지')) {
+            document.title = lang === 'ko' 
+                ? '오늘 뭐 먹지? & 동물상 테스트 - 당신의 일상을 더 즐겁게' 
+                : 'What to Eat & Animal Face Test - Make Your Day More Enjoyable';
+        } else if (document.title.includes('소개')) {
+            document.title = lang === 'ko' ? '소개 - 오늘 뭐 먹지? & 동물상 테스트' : 'About - What to Eat & Animal Face Test';
+        } else if (document.title.includes('개인정보처리방침')) {
+            document.title = lang === 'ko' ? '개인정보처리방침 - 오늘 뭐 먹지? & 동물상 테스트' : 'Privacy Policy - What to Eat & Animal Face Test';
+        } else if (document.title.includes('문의하기')) {
+            document.title = lang === 'ko' ? '문의하기 - 오늘 뭐 먹지? & 동물상 테스트' : 'Contact - What to Eat & Animal Face Test';
+        }
+    }
+
     // --- Dark Mode Toggle ---
-    toggleDarkModeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        toggleDarkModeBtn.textContent = document.body.classList.contains('dark-mode') 
-            ? (currentLang === 'ko' ? "White Mode" : "White Mode") 
-            : (currentLang === 'ko' ? "Dark Mode" : "Dark Mode");
-    });
+    if (toggleDarkModeBtn) {
+        toggleDarkModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            toggleDarkModeBtn.textContent = isDarkMode ? 'White Mode' : 'Dark Mode';
+        });
+    }
 
     // --- "What to Eat for Dinner?" Feature ---
     const dinnerMenus = {
@@ -62,11 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomIndex = Math.floor(Math.random() * menus.length);
         const suggestion = menus[randomIndex];
 
-        dinnerSuggestionBox.classList.add('animate');
-        setTimeout(() => {
-            dinnerSuggestionBox.textContent = suggestion;
-            dinnerSuggestionBox.classList.remove('animate');
-        }, 500); // Animation duration
+        if (dinnerSuggestionBox) {
+            dinnerSuggestionBox.classList.add('animate');
+            setTimeout(() => {
+                dinnerSuggestionBox.textContent = suggestion;
+                dinnerSuggestionBox.classList.remove('animate');
+            }, 500); // Animation duration
+        }
     }
 
     if (generateDinnerBtn) {
@@ -78,12 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let model;
 
     async function initAnimalTest() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-        try {
-            model = await tmImage.load(modelURL, metadataURL);
-        } catch (e) {
-            console.error("Error loading model:", e);
+        if (typeof tmImage !== 'undefined') {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            try {
+                model = await tmImage.load(modelURL, metadataURL);
+            } catch (e) {
+                console.error("Error loading model:", e);
+            }
         }
     }
 
@@ -98,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     imagePreview.src = e.target.result;
                     imagePreview.style.display = 'block';
                     predictButton.style.display = 'inline-block';
-                    labelContainer.innerHTML = '';
+                    if (labelContainer) labelContainer.innerHTML = '';
                 };
                 reader.readAsDataURL(file);
             }
@@ -113,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayPredictions(prediction) {
+        if (!labelContainer) return;
         labelContainer.innerHTML = '';
         let highestProb = 0;
         let bestClass = "";
@@ -124,7 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        const resultText = currentLang === 'ko' ? `${bestClass}상일 확률이 높습니다.` : `You are likely a ${bestClass}.`;
+        const lang = document.documentElement.lang || 'ko';
+        const resultText = lang === 'ko' ? `${bestClass}상일 확률이 높습니다.` : `You are likely a ${bestClass}.`;
         const div = document.createElement('div');
         div.innerText = resultText;
         labelContainer.appendChild(div);

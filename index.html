@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 뭐 먹지? & 동물상 테스트</title>
+    <title>오늘 뭐 먹지? & 동물상 테스트 - 당신의 일상을 더 즐겁게</title>
+    <meta name="description" content="오늘 저녁 메뉴 추천과 인공지능 동물상 테스트로 당신의 하루에 즐거움을 더하세요. 빠르고 재미있는 무료 웹 서비스입니다.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,13 +16,14 @@
 
     <div id="dinner-feature" class="container">
         <h1 data-ko="오늘 저녁 뭐 먹지?" data-en="What to Eat for Dinner?">오늘 저녁 뭐 먹지?</h1>
+        <p data-ko="결정 장애는 이제 그만! 버튼 하나로 저녁 메뉴를 추천받으세요. 매일 똑같은 고민을 해결해드립니다." data-en="Stop hesitating! Get dinner suggestions with a single click. We solve your daily dilemma."></p>
         <div id="dinner-suggestion-box" class="suggestion-box">?</div>
         <button id="generate-dinner-btn" data-ko="메뉴 추천" data-en="Get Suggestion">메뉴 추천</button>
     </div>
 
     <div id="animal-feature" class="container" style="display:none;">
         <h1 data-ko="동물상 테스트" data-en="Animal Face Test">동물상 테스트</h1>
-        <p data-ko="얼굴 사진을 업로드하여 동물상을 확인해보세요." data-en="Upload a photo of your face to see your animal face type.">얼굴 사진을 업로드하여 동물상을 확인해보세요.</p>
+        <p data-ko="나는 어떤 동물과 닮았을까? 인공지능이 당신의 얼굴을 분석하여 알려드립니다. 사진은 절대 저장되지 않으니 안심하세요." data-en="Which animal do I look like? AI will analyze your face and tell you. Your photos are never saved."></p>
         <img id="image-preview" style="display:none; max-width: 100%; margin: 20px 0;" />
         <div id="label-container"></div>
         <input type="file" id="image-upload" accept="image/*" style="display: none;">
@@ -29,35 +31,18 @@
         <button id="predict-button" style="display:none;" data-ko="판별하기" data-en="Predict">판별하기</button>
     </div>
 
-    <div class="container" id="contact-form">
-        <h2 data-ko="제휴 문의" data-en="Partnership Inquiry">제휴 문의</h2>
-        <form action="https://formspree.io/f/mqeypzgw" method="POST">
-            <label for="name" data-ko="이름" data-en="Name">이름</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="email" data-ko="이메일" data-en="Email">이메일</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="message" data-ko="메시지" data-en="Message">메시지</label>
-            <textarea id="message" name="message" required></textarea>
-
-            <button type="submit" data-ko="보내기" data-en="Send">보내기</button>
-        </form>
-    </div>
-
-    <div class="container" id="disqus_thread"></div>
+    <footer>
+        <p>&copy; 2023 오늘 뭐 먹지? & 동물상 테스트. All Rights Reserved.</p>
+        <nav>
+            <a href="index.html" data-ko="홈" data-en="Home">홈</a> |
+            <a href="about.html" data-ko="소개" data-en="About">소개</a> |
+            <a href="privacy.html" data-ko="개인정보처리방침" data-en="Privacy Policy">개인정보처리방침</a> |
+            <a href="contact.html" data-ko="문의하기" data-en="Contact">문의하기</a>
+        </nav>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script src="main.js"></script>
-    <script>
-        (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://productbuilder-lzwht3lujc.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
