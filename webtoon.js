@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Configuration for the backend server endpoint.
+    // In a real deployment, this would be a public URL.
+    const API_BASE_URL = 'http://127.0.0.1:5000'; 
+
     const createShortsBtn = document.getElementById('create-shorts-btn');
     const webtoonUrlInput = document.getElementById('webtoon-url');
     const statusContainer = document.getElementById('webtoon-status');
@@ -11,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Clear previous status
-            statusContainer.innerHTML = ''; 
+            // Disable button to prevent multiple requests
+            createShortsBtn.disabled = true;
+            createShortsBtn.textContent = '⏳ 제작 중...';
 
-            // Simulate the creation process
-            simulateShortsCreation(url);
+            // Clear previous status and start the process
+            statusContainer.innerHTML = ''; 
+            requestShortsCreation(url);
         });
     }
 
@@ -26,17 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
         statusContainer.scrollTop = statusContainer.scrollHeight; // Scroll to bottom
     }
 
-    function addDownloadButton(webtoonName) {
+    function addDownloadButton(downloadUrl, fileName) {
         const downloadBtn = document.createElement('a');
-        downloadBtn.href = '#'; // Placeholder link for simulation
-        downloadBtn.textContent = `🎬 ${webtoonName}.mp4 다운로드`;
-        downloadBtn.classList.add('button-link'); // Re-use button-link style
-        downloadBtn.setAttribute('download', `${webtoonName}.mp4`); // Simulate download attribute
-        
-        downloadBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('이것은 시뮬레이션 기능입니다. 실제 파일은 생성되지 않았습니다.');
-        });
+        // The URL points to our backend's download endpoint
+        downloadBtn.href = `${API_BASE_URL}${downloadUrl}`;
+        downloadBtn.textContent = `🎬 ${fileName} 다운로드`;
+        downloadBtn.classList.add('button-link'); 
+        // The 'download' attribute tells the browser to download the file
+        downloadBtn.setAttribute('download', fileName);
         
         const buttonContainer = document.createElement('div');
         buttonContainer.style.textAlign = 'center';
@@ -47,39 +50,39 @@ document.addEventListener('DOMContentLoaded', () => {
         statusContainer.scrollTop = statusContainer.scrollHeight;
     }
 
-    async function simulateShortsCreation(url) {
-        addStatusMessage('✅ 요청이 접수되었습니다. 쇼츠 제작을 시작합니다.');
-        await new Promise(r => setTimeout(r, 1000));
+    async function requestShortsCreation(url) {
+        addStatusMessage('✅ 요청이 접수되었습니다. 백엔드 서버에 작업을 요청하는 중입니다...');
 
-        addStatusMessage('🌐 브라우저를 실행하고 웹툰 페이지를 분석하고 있습니다...');
-        await new Promise(r => setTimeout(r, 2000));
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/create-shorts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url: url })
+            });
 
-        addStatusMessage('📸 웹툰의 모든 컷을 캡처하고 있습니다...');
-        await new Promise(r => setTimeout(r, 3000));
+            // Re-enable the button regardless of outcome
+            createShortsBtn.disabled = false;
+            createShortsBtn.textContent = '쇼츠 제작하기';
 
-        addStatusMessage('🖼️ 캡처한 이미지를 하나로 합치는 중입니다...');
-        await new Promise(r => setTimeout(r, 1500));
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `서버 오류: ${response.status}`);
+            }
 
-        addStatusMessage('🎥 고퀄리티 영상 편집 효과를 적용하고 있습니다 (스크롤, 자막, BGM)...');
-        await new Promise(r => setTimeout(r, 4000));
+            const result = await response.json();
 
-        addStatusMessage('✨ AI가 SEO에 최적화된 영상 제목을 생성하고 있습니다...');
-        await new Promise(r => setTimeout(r, 1000));
-        const webtoonName = url.split('/').pop() || '추천웹툰';
-        const seoTitle = getSeoTitle(webtoonName);
-        addStatusMessage(`✅ 완성! 추천 제목: ${seoTitle}`);
-        
-        // Add the download button
-        addDownloadButton(webtoonName);
-    }
+            addStatusMessage('✅ 영상 제작이 완료되었습니다! 아래 버튼을 클릭하여 다운로드하세요.');
+            addDownloadButton(result.downloadUrl, result.fileName);
 
-    function getSeoTitle(webtoonName) {
-        const strategies = [
-            `솔직히 '${webtoonName}'... 안 본 사람 없게 해주세요 (결말 소름) ㄷㄷ`,
-            `당신이 '${webtoonName}' 주인공이라면? 네이버 레전드 찍음 🔥`,
-            `[${webtoonName}] 1화부터 정주행 각! 1분 만에 몰아보기 🚀`,
-            `AI가 직접 제작한 ${webtoonName} 쇼츠 퀄리티 실화냐?? 😱`
-        ];
-        return strategies[Math.floor(Math.random() * strategies.length)];
+        } catch (error) {
+            console.error('Error creating shorts:', error);
+            addStatusMessage(`❌ 오류가 발생했습니다: ${error.message}`);
+            addStatusMessage('백엔드 서버가 실행 중인지, FFmpeg가 설치되었는지 확인해주세요.');
+            // Re-enable the button on error
+            createShortsBtn.disabled = false;
+            createShortsBtn.textContent = '쇼츠 제작하기';
+        }
     }
 });
