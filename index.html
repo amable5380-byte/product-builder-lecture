@@ -1,35 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동물상 테스트</title>
+    <title>오늘 뭐 먹지? & 동물상 테스트</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>동물상 테스트</h1>
-        <p>얼굴 사진을 업로드하여 동물상을 확인해보세요.</p>
+    <div class="top-right-buttons">
+        <button id="toggle-feature-btn" data-ko="동물상 테스트" data-en="Animal Face Test">동물상 테스트</button>
+        <button id="toggle-lang-btn" data-ko="ENGLISH" data-en="한글">ENGLISH</button>
+        <button id="toggle-dark-mode-btn" data-ko="Dark Mode" data-en="Dark Mode">Dark Mode</button>
+    </div>
+
+    <div id="dinner-feature" class="container">
+        <h1 data-ko="오늘 저녁 뭐 먹지?" data-en="What to Eat for Dinner?">오늘 저녁 뭐 먹지?</h1>
+        <div class="numbers" id="dinner-numbers"></div>
+        <button id="generate-dinner-btn" data-ko="메뉴 추천" data-en="Get Suggestion">메뉴 추천</button>
+    </div>
+
+    <div id="animal-feature" class="container" style="display:none;">
+        <h1 data-ko="동물상 테스트" data-en="Animal Face Test">동물상 테스트</h1>
+        <p data-ko="얼굴 사진을 업로드하여 동물상을 확인해보세요." data-en="Upload a photo of your face to see your animal face type.">얼굴 사진을 업로드하여 동물상을 확인해보세요.</p>
         <img id="image-preview" style="display:none; max-width: 100%; margin: 20px 0;" />
         <div id="label-container"></div>
         <input type="file" id="image-upload" accept="image/*" style="display: none;">
-        <label for="image-upload" class="custom-file-upload">이미지 선택</label>
-        <button id="predict-button" style="display:none;">판별하기</button>
+        <label for="image-upload" class="custom-file-upload" data-ko="이미지 선택" data-en="Choose Image">이미지 선택</label>
+        <button id="predict-button" style="display:none;" data-ko="판별하기" data-en="Predict">판별하기</button>
     </div>
 
     <div class="container" id="contact-form">
-        <h2>Partnership Inquiry</h2>
+        <h2 data-ko="제휴 문의" data-en="Partnership Inquiry">제휴 문의</h2>
         <form action="https://formspree.io/f/mqeypzgw" method="POST">
-            <label for="name">Name</label>
+            <label for="name" data-ko="이름" data-en="Name">이름</label>
             <input type="text" id="name" name="name" required>
 
-            <label for="email">Email</label>
+            <label for="email" data-ko="이메일" data-en="Email">이메일</label>
             <input type="email" id="email" name="email" required>
 
-            <label for="message">Message</label>
+            <label for="message" data-ko="메시지" data-en="Message">메시지</label>
             <textarea id="message" name="message" required></textarea>
 
-            <button type="submit">Send</button>
+            <button type="submit" data-ko="보내기" data-en="Send">보내기</button>
         </form>
     </div>
 
@@ -39,12 +51,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script src="main.js"></script>
     <script>
-        /*
-        var disqus_config = function () {
-        this.page.url = PAGE_URL;
-        this.page.identifier = PAGE_IDENTIFIER;
-        };
-        */
         (function() {
         var d = document, s = d.createElement('script');
         s.src = 'https://productbuilder-lzwht3lujc.disqus.com/embed.js';
