@@ -9,10 +9,12 @@
 <body>
     <div class="container">
         <h1>동물상 테스트</h1>
-        <p>당신의 얼굴은 강아지상일까요, 고양이상일까요?</p>
-        <div id="webcam-container"></div>
+        <p>얼굴 사진을 업로드하여 동물상을 확인해보세요.</p>
+        <img id="image-preview" style="display:none; max-width: 100%; margin: 20px 0;" />
         <div id="label-container"></div>
-        <button id="start-button">시작하기</button>
+        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+        <label for="image-upload" class="custom-file-upload">이미지 선택</label>
+        <button id="predict-button" style="display:none;">판별하기</button>
     </div>
 
     <div class="container" id="contact-form">
