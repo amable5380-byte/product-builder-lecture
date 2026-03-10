@@ -1,46 +1,25 @@
 
-const numbersContainer = document.querySelector('.numbers');
+const menuDisplay = document.getElementById('menu-display');
 const generateButton = document.getElementById('generate');
 const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
 
-const generateLottoNumbers = () => {
-    // Clear previous numbers
-    numbersContainer.innerHTML = '';
+const dinnerMenus = [
+    "치킨", "피자", "삼겹살", "떡볶이", "초밥", "파스타",
+    "김치찌개", "된장찌개", "부대찌개", "곱창", "족발", "보쌈",
+    "짜장면", "짬뽕", "탕수육", "라멘", "돈까스", "햄버거"
+];
 
-    const lottoNumbers = new Set();
-    while (lottoNumbers.size < 6) {
-        const randomNumber = Math.floor(Math.random() * 45) + 1;
-        lottoNumbers.add(randomNumber);
-    }
-
-    const sortedNumbers = Array.from(lottoNumbers).sort((a, b) => a - b);
-
-    sortedNumbers.forEach(number => {
-        const numberElement = document.createElement('div');
-        numberElement.classList.add('number');
-        numberElement.textContent = number;
-        // Assign a color based on the number range
-        numberElement.style.backgroundColor = getNumberColor(number);
-        numberElement.style.color = 'white'; 
-        numbersContainer.appendChild(numberElement);
-    });
+const recommendDinner = () => {
+    const randomIndex = Math.floor(Math.random() * dinnerMenus.length);
+    const recommendedMenu = dinnerMenus[randomIndex];
+    menuDisplay.textContent = recommendedMenu;
 };
 
-const getNumberColor = (number) => {
-    if (number <= 10) return '#f44336'; // Red
-    if (number <= 20) return '#ff9800'; // Orange
-    if (number <= 30) return '#4caf50'; // Green
-    if (number <= 40) return '#2196f3'; // Blue
-    return '#9c27b0'; // Purple
-};
-
-
-generateButton.addEventListener('click', generateLottoNumbers);
+generateButton.addEventListener('click', recommendDinner);
 
 toggleDarkModeButton.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 });
 
-// Generate numbers on initial load
-generateLottoNumbers();
-
+// Recommend a dinner on initial load
+recommendDinner();
