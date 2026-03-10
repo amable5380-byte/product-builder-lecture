@@ -1,6 +1,7 @@
 
 const numbersContainer = document.querySelector('.numbers');
 const generateButton = document.getElementById('generate');
+const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
 
 const generateLottoNumbers = () => {
     // Clear previous numbers
@@ -35,6 +36,10 @@ const getNumberColor = (number) => {
 
 
 generateButton.addEventListener('click', generateLottoNumbers);
+
+toggleDarkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
 
 // Generate numbers on initial load
 generateLottoNumbers();
