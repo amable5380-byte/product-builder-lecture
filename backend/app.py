@@ -6,33 +6,34 @@ import os
 import uuid
 
 # --- Configuration ---
-# Use a temporary directory for storing generated files.
-# In a real production environment, you would use a more robust storage solution
-# like Google Cloud Storage or Amazon S3.
 OUTPUT_DIR = "temp_output"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # --- Flask App Initialization ---
 app = Flask(__name__)
-# Enable Cross-Origin Resource Sharing (CORS) to allow our web frontend
-# to communicate with this backend server.
-CORS(app)
+
+# Configure CORS to allow requests specifically from your GitHub Pages domain
+# and from local development environments.
+CORS(app, resources={r"/api/*": {
+    "origins": [
+        "http://127.0.0.1:5500",  # For local testing (e.g., with VS Code Live Server)
+        "https://amable5380-byte.github.io" # Your deployed frontend
+    ]
+}})
 
 # --- Helper Functions ---
 def get_sanitized_filename(url):
     """Creates a safe filename from a URL."""
-    # Take the last part of the URL path
     base_name = url.split('/')[-1] if url.split('/')[-1] else "webtoon"
-    # Replace invalid characters
     return "".join(c for c in base_name if c.isalnum() or c in ('-', '_')).rstrip()
 
 # --- API Endpoints ---
-@app.route('/api/create-shorts', methods=['POST'])
+@app.route('/api/create-shorts', methods=['POST', 'OPTIONS']) # Added OPTIONS for preflight requests
 def create_shorts_endpoint():
-    """
-    API endpoint to create a webtoon shorts video.
-    Expects a JSON payload with a 'url' key.
-    """
+    if request.method == 'OPTIONS':
+        # Handle CORS preflight request
+        return _build_cors_preflight_response()
+
     data = request.get_json()
     webtoon_url = data.get('url')
 
@@ -41,27 +42,20 @@ def create_shorts_endpoint():
 
     print(f"✅ Received request to create shorts for: {webtoon_url}")
 
-    # Generate a unique ID for this request to avoid filename conflicts
     request_id = str(uuid.uuid4())
     sanitized_name = get_sanitized_filename(webtoon_url)
     output_filename = f"{sanitized_name}_{request_id}.mp4"
     output_filepath = os.path.join(OUTPUT_DIR, output_filename)
 
-    # --- SIMULATION: Replace this block with actual video generation ---
-    # This is a placeholder to simulate video creation.
-    # We'll create a dummy MP4 file. In a real scenario, this is where you would
-    # call your web scraping and video processing logic (e.g., using Selenium, moviepy).
     try:
         print(f"🎥 Simulating video creation for {output_filename}...")
-        # Use FFmpeg to create a short, silent, black video as a placeholder
         ffmpeg_command = [
             'ffmpeg',
             '-f', 'lavfi',
-            '-i', 'color=c=black:s=1080x1920:r=30:d=5', # 5-second black video
-            '-y', # Overwrite output file if it exists
+            '-i', 'color=c=black:s=1080x1920:r=30:d=5',
+            '-y',
             output_filepath
         ]
-        # Using subprocess.run to execute the command
         result = subprocess.run(ffmpeg_command, check=True, capture_output=True, text=True)
         print("✅ Simulation complete. Dummy MP4 file created.")
         
@@ -71,27 +65,30 @@ def create_shorts_endpoint():
     except subprocess.CalledProcessError as e:
         print(f"❌ Error during dummy file creation: {e.stderr}")
         return jsonify({"error": "Failed to create dummy video file."}), 500
-    # --- End of Simulation Block ---
 
-
-    # Return the URL to download the generated file
     download_url = f'/downloads/{output_filename}'
-    return jsonify({
+    response = jsonify({
         "message": "Video creation process started successfully.",
         "downloadUrl": download_url,
         "fileName": output_filename
     })
+    
+    return response
 
 @app.route('/downloads/<filename>')
 def download_file(filename):
-    """
-    Serves the generated video file for download.
-    """
+    """Serves the generated video file for download."""
     print(f"⬇️ Serving file: {filename}")
     return send_from_directory(OUTPUT_DIR, filename, as_attachment=True)
 
+# --- CORS Preflight Response Helper ---
+def _build_cors_preflight_response():
+    response = jsonify(success=True)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization")
+    response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
+    return response
+
 # --- Main Execution ---
 if __name__ == '__main__':
-    # Running on 0.0.0.0 makes the server accessible from your local network.
-    # The default port is 5000.
     app.run(host='0.0.0.0', port=5000, debug=True)
