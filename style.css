@@ -132,18 +132,42 @@ button, input[type="submit"] {
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
 }
 
+.button-link {
+    display: inline-block;
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.button-link:hover {
+    background-color: var(--button-hover-bg-color);
+    transform: translateY(-1px);
+}
+
+
 button:hover, input[type="submit"]:hover {
     background-color: var(--button-hover-bg-color);
     transform: translateY(-1px);
 }
 
-#generate-dinner-btn, #predict-button {
+#generate-dinner-btn, #predict-button, #create-shorts-btn {
     padding: 15px 30px;
     font-size: 1.2rem;
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     margin-top: 20px;
 }
+
+#create-shorts-btn {
+    margin-top: 0;
+    white-space: nowrap;
+}
+
 
 /* Contact Form */
 #contact-form form {
@@ -164,6 +188,43 @@ button:hover, input[type="submit"]:hover {
     width: 100%;
     box-sizing: border-box;
 }
+
+/* Webtoon Shorts Creator */
+.webtoon-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#webtoon-url {
+    flex-grow: 1;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    font-size: 1rem;
+}
+
+#webtoon-status {
+    height: 200px;
+    overflow-y: auto;
+    background-color: #f7f7f7;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #333;
+    text-align: left;
+}
+
+#webtoon-status p {
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
 
 /* Footer */
 footer {
@@ -203,12 +264,31 @@ body.dark-mode {
     --footer-text-color: #aaaaaa;
 }
 
+body.dark-mode .webtoon-form input {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #fff;
+}
+
+body.dark-mode #webtoon-status {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #ddd;
+}
+
+body.dark-mode .button-link {
+    background-color: var(--button-bg-color);
+    color: var(--button-text-color);
+}
+
+
 /* Responsive Design */
 @media (max-width: 600px) {
     .top-right-buttons {
         position: static;
         margin-bottom: 20px;
         justify-content: center;
+        flex-wrap: wrap;
     }
     .container {
         padding: 20px;
@@ -217,4 +297,11 @@ body.dark-mode {
     h1 {
         font-size: 2rem;
     }
+    .webtoon-form {
+        flex-direction: column;
+    }
+    #create-shorts-btn {
+        margin-top: 10px;
+    }
+
 }
