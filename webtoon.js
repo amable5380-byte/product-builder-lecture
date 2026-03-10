@@ -5,18 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const webtoonUrlInput = document.getElementById('webtoon-url');
     const statusContainer = document.getElementById('webtoon-status');
 
-    if (createShortsBtn) {
+    // Ensure all elements for the webtoon feature are present before adding event listeners.
+    // This prevents errors if the script is loaded on other pages.
+    if (createShortsBtn && webtoonUrlInput && statusContainer) {
         createShortsBtn.addEventListener('click', () => {
             const url = webtoonUrlInput.value.trim();
             
-            // Clear previous status and disable button before any other logic
             statusContainer.innerHTML = '';
             createShortsBtn.disabled = true;
             createShortsBtn.textContent = '⏳ 제작 중...';
 
             if (!url || !url.startsWith('http')) {
                 addStatusMessage('❌ 유효하지 않은 URL입니다. 웹툰 주소를 정확히 입력해주세요.');
-                // Re-enable button immediately if input is invalid
                 createShortsBtn.disabled = false;
                 createShortsBtn.textContent = '쇼츠 제작하기';
                 return;
@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addStatusMessage(message) {
-        if (!statusContainer) return; // Guard clause
+        if (!statusContainer) return;
         const p = document.createElement('p');
-        p.innerHTML = message; // Use innerHTML to render line breaks
+        p.innerHTML = message;
         statusContainer.appendChild(p);
         statusContainer.scrollTop = statusContainer.scrollHeight;
     }
 
     function addDownloadButton(downloadUrl, fileName) {
-        if (!statusContainer) return; // Guard clause
+        if (!statusContainer) return;
 
         const downloadBtn = document.createElement('a');
         downloadBtn.href = `${API_BASE_URL}${downloadUrl}`;
@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function requestShortsCreation(url) {
         try {
-            // The status message is now added inside the try block.
             addStatusMessage('✅ 요청이 접수되었습니다. 백엔드 서버에 작업을 요청하는 중입니다...');
 
             const response = await fetch(`${API_BASE_URL}/api/create-shorts`, {
@@ -81,9 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             addStatusMessage(errorMessage);
         } finally {
-            // This block will now always execute, ensuring the button is re-enabled.
-            createShortsBtn.disabled = false;
-            createShortsBtn.textContent = '쇼츠 제작하기';
+            if (createShortsBtn) {
+                createShortsBtn.disabled = false;
+                createShortsBtn.textContent = '쇼츠 제작하기';
+            }
         }
     }
 });
